@@ -1,0 +1,178 @@
+/* 1. Variáveis de Cores e Configurações */
+:root {
+    --bg-body: #050a18;       /* Azul marinho profundo */
+    --bg-card: #0d1629;       /* Azul dos elementos */
+    --primary: #c84b59;       /* Vermelho/Goiaba do logo */
+    --accent: #ff4d6d;        /* Hover vibrante */
+    --text: #e0e0e0;
+    --border: rgba(200, 75, 89, 0.3);
+    --transition: all 0.3s ease;
+}
+
+/* 2. Reset e Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden; /* Evita scroll horizontal por causa da sidebar */
+}
+
+/* 3. Header */
+header {
+    background: rgba(13, 22, 41, 0.8);
+    backdrop-filter: blur(12px);
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: var(--primary);
+    letter-spacing: 2px;
+}
+
+nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+nav a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    transition: var(--transition);
+}
+
+nav a:hover {
+    color: var(--primary);
+}
+
+/* 4. Estrutura do Calendário (Onde a mágica acontece) */
+.calendar-section {
+    padding: 40px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.calendar-wrap {
+    position: relative; 
+    display: flex;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    min-height: 500px;
+    overflow: hidden;
+}
+
+#calendar-main {
+    flex: 1;
+    padding: 30px;
+    transition: var(--transition);
+}
+
+.calendar-header {
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+}
+
+/* Grid de 7 colunas */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+}
+
+.day-name {
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+}
+
+.day {
+    aspect-ratio: 1 / 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.day:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(200, 75, 89, 0.4);
+}
+
+/* 5. Sidebar de Reservas */
+.sidebar {
+    width: 350px;
+    background: #0a1121;
+    border-left: 2px solid var(--primary);
+    padding: 30px;
+    
+    /* Posicionamento */
+    position: absolute;
+    right: -350px;
+    top: 0;
+    bottom: 0;
+
+    /* Animação e Camada */
+    transition: right 0.4s ease-in-out;
+    z-index: 999; 
+    box-shadow: -10px 0 20px rgba(0,0,0,0.5);
+}
+
+.sidebar.active {
+    right: 0 !important; /*barra lateral aparece ao lado*/
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 2rem;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+
+.event-item {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--primary);
+}
+
+/* Responsividade Básica */
+@media (max-width: 768px) {
+    .calendar-wrap { flex-direction: column; }
+    .sidebar { width: 100%; right: -100%; }
+    nav ul { display: none; } /* Menu hamburguer seria necessário aqui */
+}
