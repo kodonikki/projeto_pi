@@ -1,0 +1,1 @@
+<?php echo "<h1>Meu projeto está funcionando!</h1>"; ?>
