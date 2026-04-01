@@ -5,7 +5,7 @@ async function showSchedule(date) {
     const list = document.getElementById('schedule-list');
     const dateTitle = document.getElementById('selected-date');
 
-    // 1. Formata a exibição da data no título (ex: 31/03/2026)
+    // 1. Formata a exibição da data no título
     const dataBr = date.split('-').reverse().join('/');
     dateTitle.innerText = "Reservas: " + dataBr;
 
@@ -16,7 +16,7 @@ async function showSchedule(date) {
     sidebar.classList.add('active');
 
     try {
-        // 4. Faz a requisição ao PHP passando a data
+        // 4. Faz a requisição
         const response = await fetch(`get_reservas.php?data=${date}`);
         const reservas = await response.json();
 
@@ -26,7 +26,7 @@ async function showSchedule(date) {
             return;
         }
 
-        // 6. Se houver, monta o HTML dinamicamente
+        // 6. Se houver
         list.innerHTML = reservas.map(res => `
             <div class="event-item">
                 <div style="font-size: 0.85rem; color: var(--primary); margin-bottom: 5px;">

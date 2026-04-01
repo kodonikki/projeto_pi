@@ -30,7 +30,7 @@
 
                         <?php 
                         for($d=1; $d<=31; $d++): 
-                            // Formata o dia com zero à esquerda (ex: 01, 02...) para o banco de dados
+                            // Formata o dia com zero à esquerda
                             $diaFormatado = str_pad($d, 2, "0", STR_PAD_LEFT);
                             $dataCompleta = "2026-03-" . $diaFormatado;
                         ?>
