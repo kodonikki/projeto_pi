@@ -1,11 +1,12 @@
 <?php
 $host = 'localhost';
-$db   = 'etec_sistema';
+$dbname = 'sistema_reservas';
 $user = 'root';
-$pass = ''; 
+$pass = '';
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Erro na conexão: " . $e->getMessage());
 }

@@ -1,48 +1,99 @@
-// script.js
+document.addEventListener("DOMContentLoaded", () => {
+    const calendar = document.getElementById("calendar");
+    const mesAno = document.getElementById("mes-ano");
+    const dataSelecionadaSpan = document.getElementById("dataSelecionada");
+    const listaReservas = document.getElementById("listaReservas");
 
-async function showSchedule(date) {
-    const sidebar = document.getElementById('schedule-sidebar');
-    const list = document.getElementById('schedule-list');
-    const dateTitle = document.getElementById('selected-date');
+    // Modal elements
+    const modal = document.getElementById("modalReserva");
+    const btnNovo = document.getElementById("btnNovaReserva");
+    const spanClose = document.getElementsByClassName("close")[0];
 
-    // 1. Formata a exibição da data no título
-    const dataBr = date.split('-').reverse().join('/');
-    dateTitle.innerText = "Reservas: " + dataBr;
+    // Data atual
+    let hoje = new Date();
+    let mesAtual = hoje.getMonth();
+    let anoAtual = hoje.getFullYear();
 
-    // 2. Limpa a lista e mostra que está carregando
-    list.innerHTML = "<p style='color: #8892b0;'>Buscando reservas...</p>";
-    
-    // 3. Adiciona a classe active para a barra lateral deslizar para dentro
-    sidebar.classList.add('active');
+    const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
-    try {
-        // 4. Faz a requisição
-        const response = await fetch(`get_reservas.php?data=${date}`);
-        const reservas = await response.json();
+    function renderizarCalendario(mes, ano) {
+        calendar.innerHTML = "";
+        mesAno.innerText = `${meses[mes]} ${ano}`;
 
-        // 5. Se não houver nada no banco para esse dia
-        if (reservas.length === 0) {
-            list.innerHTML = "<p>Nenhuma reserva para este dia.</p>";
-            return;
+        let primeiroDia = new Date(ano, mes, 1).getDay();
+        let diasNoMes = new Date(ano, mes + 1, 0).getDate();
+
+        // Dias vazios do mês anterior
+        for (let i = 0; i < primeiroDia; i++) {
+            let emptyDiv = document.createElement("div");
+            calendar.appendChild(emptyDiv);
         }
 
-        // 6. Se houver
-        list.innerHTML = reservas.map(res => `
-            <div class="event-item">
-                <div style="font-size: 0.85rem; color: var(--primary); margin-bottom: 5px;">
-                    <strong>${res.hora_inicio.substring(0,5)} - ${res.hora_fim.substring(0,5)}</strong>
-                </div>
-                <div style="font-weight: bold; margin-bottom: 3px;">${res.ambiente}</div>
-                <div style="font-size: 0.9rem; opacity: 0.8;">Prof. ${res.professor}</div>
-            </div>
-        `).join('');
-
-    } catch (error) {
-        console.error("Erro:", error);
-        list.innerHTML = "<p>Erro ao conectar com o servidor.</p>";
+        // Preencher os dias do mês
+        for (let dia = 1; dia <= diasNoMes; dia++) {
+            let dayDiv = document.createElement("div");
+            dayDiv.classList.add("day");
+            dayDiv.innerText = dia;
+            
+            // Formatando data para YYYY-MM-DD
+            let dataFormatada = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+            
+            dayDiv.onclick = () => carregarReservas(dataFormatada);
+            calendar.appendChild(dayDiv);
+        }
     }
-}
 
-function closeSidebar() {
-    document.getElementById('schedule-sidebar').classList.remove('active');
-}
+    // Carregar Reservas do Dia Clicado via AJAX (Fetch API)
+    function carregarReservas(data) {
+        dataSelecionadaSpan.innerText = data;
+        listaReservas.innerHTML = "Carregando...";
+
+        fetch(`api_reservas.php?data=${data}`)
+            .then(response => response.json())
+            .then(dados => {
+                listaReservas.innerHTML = "";
+                if (dados.length === 0) {
+                    listaReservas.innerHTML = "<p>Nenhuma reserva para este dia.</p>";
+                    return;
+                }
+                dados.forEach(reserva => {
+                    listaReservas.innerHTML += `
+                        <div class="reserva-item">
+                            <strong>${reserva.horario}</strong> - ${reserva.nome_usuario}<br>
+                            <small>${reserva.descricao}</small>
+                        </div>
+                    `;
+                });
+            });
+    }
+
+    // Eventos do Modal
+    btnNovo.onclick = () => modal.style.display = "block";
+    spanClose.onclick = () => modal.style.display = "none";
+    window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; }
+
+    // Enviar formulário de nova reserva via AJAX
+    document.getElementById("formReserva").addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        let formData = new FormData();
+        formData.append("data", document.getElementById("reservaData").value);
+        formData.append("hora", document.getElementById("reservaHora").value);
+        formData.append("desc", document.getElementById("reservaDesc").value);
+
+        fetch("api_reservas.php", {
+            method: "POST",
+            body: formData
+        }).then(response => response.text())
+        .then(msg => {
+            alert(msg);
+            modal.style.display = "none";
+            // Recarrega as reservas se o dia selecionado for o mesmo que acabou de receber a reserva
+            if (dataSelecionadaSpan.innerText === document.getElementById("reservaData").value) {
+                carregarReservas(document.getElementById("reservaData").value);
+            }
+        });
+    });
+
+    renderizarCalendario(mesAtual, anoAtual);
+});
