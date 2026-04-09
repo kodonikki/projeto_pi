@@ -44,7 +44,7 @@ $mensagens_recebidas = $stmt_msg->fetchAll();
 </head>
 <body>
     <header>
-        <div class="logo">MeuSistema</div>
+        <div class="logo">CIETEC</div>
         <nav>
             <ul>
                 <li><a href="index.php">Calendário</a></li>
