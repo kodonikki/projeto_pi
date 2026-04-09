@@ -1,11 +1,13 @@
-/* Variáveis de Cores (Baseadas na imagem) */
+/* Variáveis de Cores*/
 :root {
     --azul-escuro: #0f1c3f;
-    --azul-textura: #14214d;
     --vermelho-etec: #a33349;
     --gradiente-etec: linear-gradient(90deg, #8b253b 0%, #c54b59 100%);
+    --texto-escuro: #333333;
     --texto-claro: #ffffff;
-    --shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    --fundo-pagina: #f4f4f9; /* Fundo cinza*/
+    --fundo-card: #ffffff;   /* Fundo branco para os painéis */
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
 * { 
@@ -15,23 +17,22 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
 }
 
+/* Corpo da página */
 body { 
-    background-color: var(--azul-escuro); 
-    color: var(--texto-claro);
-    /* Sutil textura no fundo para imitar a imagem */
-    background-image: radial-gradient(circle at 20% 30%, var(--azul-textura) 0%, var(--azul-escuro) 100%);
+    background-color: var(--fundo-pagina); 
+    color: var(--texto-escuro);
 }
 
-/* Header Estilizada */
+/* Header com as cores institucionais */
 header { 
-    background: rgba(15, 28, 63, 0.95);
-    color: white; 
+    background: var(--azul-escuro);
+    color: var(--texto-claro); 
     display: flex; 
     justify-content: space-between; 
     padding: 20px 40px; 
     align-items: center;
     border-bottom: 4px solid var(--vermelho-etec);
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 10px rgba(15, 28, 63, 0.3);
 }
 
 header .logo {
@@ -58,31 +59,39 @@ header nav a:hover, header nav a.active {
     color: #f08a9b;
 }
 
+header .user-info { color: var(--texto-claro); }
+header .user-info a { color: #f08a9b; text-decoration: none; font-weight: bold; margin-left: 10px;}
+
 /* Telas de Login e Registro */
 .login-container {
     width: 100%;
     max-width: 400px;
     margin: 100px auto;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--fundo-card);
     padding: 40px;
     border-radius: 12px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 5px solid var(--vermelho-etec);
     text-align: center;
     box-shadow: var(--shadow);
 }
 
-.login-container h2 { margin-bottom: 25px; color: var(--texto-claro); }
+.login-container h2 { margin-bottom: 25px; color: var(--azul-escuro); }
 
 /* Inputs e Botões */
 input, textarea, select {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
     border-radius: 6px;
-    color: #333;
+    color: var(--texto-escuro);
+    font-size: 1rem;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--vermelho-etec);
 }
 
 button, .btn {
@@ -95,6 +104,7 @@ button, .btn {
     font-weight: bold;
     text-transform: uppercase;
     transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
 }
 
 button:hover {
@@ -111,79 +121,104 @@ button:hover {
 }
 
 .calendar-section, .side-panel, .content-box { 
-    background: rgba(255, 255, 255, 0.08); 
+    background: var(--fundo-card); 
     padding: 25px; 
     border-radius: 12px; 
-    border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: var(--shadow);
 }
 
 .calendar-section { flex: 3; }
 .side-panel { flex: 1; }
 
+.calendar-header h2 { color: var(--azul-escuro); }
+
 /* Estilo do Calendário */
-.calendar-grid { 
-    display: grid; 
-    grid-template-columns: repeat(7, 1fr); 
-    gap: 10px; 
-    margin-top: 20px;
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    min-height: 300px;
 }
 
 .day { 
     padding: 20px; 
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
     text-align: center; 
     cursor: pointer; 
     transition: 0.3s;
+    color: var(--texto-escuro);
+    font-weight: 500;
 }
 
 .day:hover { 
     background: var(--gradiente-etec);
     color: white;
+    border-color: transparent;
 }
 
-/* Modais */
+/* Modal */
 .modal { 
     display: none; 
-    position: fixed; /* Fixa o modal na tela, ignorando o scroll do fundo */
-    z-index: 9999; /* Garante que ele fique acima de qualquer elemento (header, cards, etc) */
+    position: fixed; 
+    z-index: 9999; 
     left: 0; 
     top: 0; 
     width: 100%; 
     height: 100%; 
-    background-color: rgba(0, 0, 0, 0.7); /* Fundo escurecido mais forte para dar foco */
-    backdrop-filter: blur(5px); /* Efeito de desfoque no fundo ao abrir */
+    background-color: rgba(15, 28, 63, 0.7); /* Fundo azul escuro transparente */
+    backdrop-filter: blur(4px); 
     overflow: auto; 
 }
 
 .modal-content { 
-    background-color: var(--azul-escuro); 
-    margin: 5% auto; /* 5% de distância do topo e centralizado horizontalmente */
+    background-color: var(--fundo-card); 
+    color: var(--texto-escuro);
+    margin: 5% auto; 
     padding: 30px; 
     border-radius: 12px; 
     width: 90%; 
-    max-width: 500px; /* Limita a largura em telas grandes */
-    border: 2px solid var(--vermelho-etec);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    max-width: 500px; 
+    border-top: 5px solid var(--vermelho-etec);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     position: relative;
-    animation: animatemodal 0.4s; /* Pequena animação de entrada */
+    animation: animatemodal 0.4s; 
 }
 
-/* Animação para o modal "surgir" suavemente */
 @keyframes animatemodal {
     from {top: -300px; opacity: 0}
     to {top: 0; opacity: 1}
 }
 
-/* Mensagens */
+.close { 
+    color: #888; 
+    float: right; 
+    font-size: 30px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    transition: 0.3s;
+}
+
+.close:hover { color: var(--vermelho-etec); }
+
+#modalReserva h2 { color: var(--azul-escuro); border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 15px;}
+
+#modalReserva label {
+    display: block;
+    margin-top: 10px;
+    color: var(--azul-escuro);
+    font-weight: bold;
+}
+
+/* Mensagens e Reservas no Painel Lateral */
 .reserva-item, .msg-item {
-    background: rgba(255, 255, 255, 0.05);
+    background: #f8f9fa;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 15px;
     border-left: 4px solid var(--vermelho-etec);
+    color: var(--texto-escuro);
 }
 
-.erro { color: #ff6b6b; font-size: 0.9em; margin-bottom: 10px; }
+.erro { color: #d32f2f; font-size: 0.9em; margin-bottom: 10px; font-weight: bold;}

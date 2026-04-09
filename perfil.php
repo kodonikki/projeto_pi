@@ -42,17 +42,7 @@ $usuario_atual = $stmt->fetch();
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="logo">CIETEC</div>
-        <nav>
-            <ul>
-                <li><a href="index.php">Calendário</a></li>
-                <li><a href="mensagens.php">Mensagens</a></li>
-                <li><a href="perfil.php" class="active">Perfil</a></li>
-            </ul>
-        </nav>
-        <div class="user-info">Olá, <?= htmlspecialchars($_SESSION['nome']) ?>! <a href="logout.php">Sair</a></div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <main class="main-container" style="display: flex; justify-content: center; align-items: flex-start;">
         <div style="background: white; padding: 30px; border-radius: 8px; width: 400px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">

@@ -13,6 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user && password_verify($senha, $user['senha'])) {
         $_SESSION['usuario_id'] = $user['id'];
         $_SESSION['nome'] = $user['nome'];
+        $_SESSION['is_admin'] = $user['is_admin'];
         header("Location: index.php");
         exit;
     } else {

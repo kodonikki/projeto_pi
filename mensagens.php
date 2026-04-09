@@ -43,17 +43,7 @@ $mensagens_recebidas = $stmt_msg->fetchAll();
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="logo">CIETEC</div>
-        <nav>
-            <ul>
-                <li><a href="index.php">Calendário</a></li>
-                <li><a href="mensagens.php" class="active">Mensagens</a></li>
-                <li><a href="perfil.php">Perfil</a></li>
-            </ul>
-        </nav>
-        <div class="user-info">Olá, <?= htmlspecialchars($_SESSION['nome']) ?>! <a href="logout.php">Sair</a></div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <main class="main-container" style="display: block;">
         <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
