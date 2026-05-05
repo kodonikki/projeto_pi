@@ -71,14 +71,38 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
                 reservas.forEach(res => {
-                    listaReservas.innerHTML += `
-                        <div class="reserva-item">
-                            <strong style="color:var(--vermelho-etec)">${res.nome_lab}</strong><br>
-                            <span>${res.hora_inicio.substring(0,5)} - ${res.hora_fim.substring(0,5)}</span><br>
-                            <small>Prof: ${res.nome_usuario}</small>
-                        </div>
-                    `;
-                });
+    // Verifica se a reserva pertence ao usuário logado
+    let botaoExcluir = "";
+    if (res.usuario_id == USUARIO_LOGADO_ID) {
+        botaoExcluir = `<button onclick="excluirMinhaReserva(${res.id})" class="btn-delete-small">Apagar</button>`;
+    }
+
+    listaReservas.innerHTML += `
+        <div class="reserva-item">
+            <strong style="color:var(--vermelho-etec)">${res.nome_lab}</strong> ${botaoExcluir}<br>
+            <span>${res.hora_inicio.substring(0,5)} - ${res.hora_fim.substring(0,5)}</span><br>
+            <small>Prof: ${res.nome_usuario}</small>
+        </div>
+    `;
+});
+
+// Função para disparar a exclusão
+window.excluirMinhaReserva = (id) => {
+    if (confirm("Deseja realmente apagar sua reserva?")) {
+        const fd = new FormData();
+        fd.append('acao', 'deletar');
+        fd.append('id', id);
+
+        fetch("api_reservas.php", { method: "POST", body: fd })
+            .then(r => r.text())
+            .then(res => {
+                alert(res);
+                // Atualiza a lista após deletar
+                const dataAtual = document.getElementById("dataSelecionada").innerText.split('/').reverse().join('-');
+                carregarDia(dataAtual); 
+            });
+    }
+};
             });
     }
 

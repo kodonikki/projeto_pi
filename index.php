@@ -88,6 +88,10 @@ try {
         </div>
     </div>
 
+    <script>
+        const USUARIO_LOGADO_ID = <?= $_SESSION['usuario_id'] ?>;
+    </script>
+    
     <script src="script.js"></script>
 </body>
 </html>

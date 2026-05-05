@@ -85,37 +85,6 @@ $todas_reservas = $stmt->fetchAll();
                     <?php endforeach; ?>
                 </div>
             </div>
-
-            <div class="admin-card">
-                <h3>Adicionar Lista</h3>
-                <form action="processar_admin.php" method="POST">
-                    <input type="hidden" name="acao" value="bulk_insert">
-                    <div id="corpoBulk">
-                        <div class="linha-reserva" style="display: flex; gap: 5px; margin-bottom: 5px;">
-                            <select name="lab_id[]" required style="width: 40%;">
-                                <?php foreach($labs as $l): ?>
-                                    <option value="<?= $l['id'] ?>"><?= $l['nome'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <input type="date" name="data[]" required style="width: 35%;">
-                            <input type="time" name="hora_inicio[]" required style="width: 25%;">
-                        </div>
-                    </div>
-                    <button type="button" class="btn" style="background:#666; font-size: 0.7em; margin: 5px 0;" onclick="adicionarLinha()">+ Linha</button>
-                    <button type="submit" class="btn" style="width: 100%;">Salvar</button>
-                </form>
-            </div>
-
-            <div class="admin-card">
-                <h3>Copiar Semana</h3>
-                <form action="processar_admin.php" method="POST">
-                    <input type="hidden" name="acao" value="clonar_semana">
-                    <input type="date" name="origem_inicio" title="De Segunda-feira" required>
-                    <div style="text-align: center; margin: 5px 0;">⬇ copiar para ⬇</div>
-                    <input type="date" name="destino_inicio" title="Para Segunda-feira" required>
-                    <button type="submit" class="btn" style="width: 100%; margin-top: 10px;">Clonar</button>
-                </form>
-            </div>
         </div>
 
         <div class="content-box">

@@ -4,7 +4,7 @@ require 'config.php';
 
 if (!isset($_SESSION['usuario_id'])) { die("Acesso negado"); }
 
-// BUSCAR RESERVAS (GET)
+//BUSCAR RESERVAS (GET)
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['data'])) {
     $data = $_GET['data'];
     $stmt = $pdo->prepare("
@@ -20,38 +20,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['data'])) {
     exit;
 }
 
-// CRIAR RESERVA (POST)
+//PROCESSAR DADOS (POST)
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = $_SESSION['usuario_id'];
-    $lab_id = $_POST['lab_id'];
-    $data = $_POST['data'];
-    $inicio = $_POST['hora_inicio'];
-    $fim = $_POST['hora_fim'];
-    $desc = $_POST['desc'];
+    
+    // -- AÇÃO A: DELETAR RESERVA --
+    if (isset($_POST['acao']) && $_POST['acao'] == 'deletar') {
+        $reserva_id = $_POST['id'];
+        $usuario_logado = $_SESSION['usuario_id'];
+        
+        $stmt = $pdo->prepare("DELETE FROM reservas WHERE id = ? AND usuario_id = ?");
+        $stmt->execute([$reserva_id, $usuario_logado]);
 
-    if ($inicio >= $fim) {
-        die("Erro: O horário de início deve ser menor que o de fim.");
+        if ($stmt->rowCount() > 0) {
+            echo "Reserva removida com sucesso!";
+        } else {
+            echo "Erro: Você não tem permissão para remover esta reserva.";
+        }
+        exit;
     }
 
-    // LÓGICA DE CONFLITO:
-    // Verifica se existe reserva no mesmo lab e data onde:
-    // (NovoInicio < ReservaFim) E (NovoFim > ReservaInicio)
-    $stmt_check = $pdo->prepare("
-        SELECT COUNT(*) FROM reservas 
-        WHERE laboratorio_id = ? 
-        AND data_reserva = ? 
-        AND (hora_inicio < ? AND hora_fim > ?)
-    ");
-    $stmt_check->execute([$lab_id, $data, $fim, $inicio]);
+    // -- AÇÃO B: CRIAR NOVA RESERVA --
+    // Só entra aqui se o JavaScript enviar todos os dados do formulário
+    if (isset($_POST['lab_id'], $_POST['data'], $_POST['hora_inicio'], $_POST['hora_fim'])) {
+        $user_id = $_SESSION['usuario_id'];
+        $lab_id = $_POST['lab_id'];
+        $data = $_POST['data'];
+        $inicio = $_POST['hora_inicio'];
+        $fim = $_POST['hora_fim'];
+        $desc = $_POST['desc'] ?? ''; 
 
-    if ($stmt_check->fetchColumn() > 0) {
-        die("Erro: Este laboratório já está reservado para este horário.");
+        if ($inicio >= $fim) {
+            die("Erro: O horário de início deve ser menor que o de fim.");
+        }
+
+        // Verifica se existe conflito no mesmo laboratório e horário
+        $stmt_check = $pdo->prepare("
+            SELECT COUNT(*) FROM reservas 
+            WHERE laboratorio_id = ? 
+            AND data_reserva = ? 
+            AND (hora_inicio < ? AND hora_fim > ?)
+        ");
+        $stmt_check->execute([$lab_id, $data, $fim, $inicio]);
+
+        if ($stmt_check->fetchColumn() > 0) {
+            die("Erro: Este laboratório já está reservado para este horário.");
+        }
+
+        // Salva no banco
+        $stmt = $pdo->prepare("INSERT INTO reservas (usuario_id, laboratorio_id, data_reserva, hora_inicio, hora_fim, descricao) VALUES (?, ?, ?, ?, ?, ?)");
+        if ($stmt->execute([$user_id, $lab_id, $data, $inicio, $fim, $desc])) {
+            echo "Reserva realizada com sucesso!";
+        } else {
+            echo "Erro ao salvar reserva no banco.";
+        }
+        exit; 
     }
 
-    $stmt = $pdo->prepare("INSERT INTO reservas (usuario_id, laboratorio_id, data_reserva, hora_inicio, hora_fim, descricao) VALUES (?, ?, ?, ?, ?, ?)");
-    if ($stmt->execute([$user_id, $lab_id, $data, $inicio, $fim, $desc])) {
-        echo "Reserva realizada com sucesso!";
-    } else {
-        echo "Erro ao salvar reserva.";
-    }
+    echo "Erro: Dados incompletos ou requisição inválida.";
+    exit;
 }
