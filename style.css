@@ -41,7 +41,6 @@ header .logo {
     letter-spacing: 1px;
     text-transform: uppercase;
     background: var(--gradiente-etec);
-    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
