@@ -35,6 +35,8 @@ try {
                 <h2 id="mes-ano"></h2>
                 <button id="btnNextMes" class="btn">&gt;</button>
                 <button id="btnNovaReserva" class="btn">Nova Reserva</button>
+                <button id="btnTrocarVisao" class="btn">📊</button>
+                <div id="labs-view" style="display: none;"></div>
             </div>
             
             <div class="calendar-grid-header" style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; margin-bottom: 10px;">

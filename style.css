@@ -222,3 +222,16 @@ button:hover {
 }
 
 .erro { color: #d32f2f; font-size: 0.9em; margin-bottom: 10px; font-weight: bold;}
+
+/*Tipos de visualização*/
+
+#labs-view h3 {
+    margin-bottom: 20px;
+    color: var(--azul-escuro);
+    text-align: center;
+}
+
+#labs-view div:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
